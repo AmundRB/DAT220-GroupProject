@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 
 # Database connection
 def get_db_connection():
@@ -44,4 +44,4 @@ def courses():
     return render_template('courses.html', courses=courses)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
