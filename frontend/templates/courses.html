@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+{% block content %}
+    <div class="container mt-4">
+        <h2>Courses</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Credits</th>
+                    <th>Professor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{ course.id }}</td>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.description }}</td>
+                    <td>{{ course.credits }}</td>
+                    <td>{{ course.professor or 'TBD' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
