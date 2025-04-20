@@ -29,12 +29,23 @@ def index():
 
 @app.route('/students')
 def students():
+    search_query = request.args.get('search', '')
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Students")
+
+    if search_query:
+        cursor.execute(
+            "SELECT * FROM Students WHERE name LIKE %s",
+            ('%' + search_query + '%',)
+        )
+    else:
+        cursor.execute("SELECT * FROM Students")
+
     students = cursor.fetchall()
     conn.close()
-    return render_template('students.html', students=students)
+
+    return render_template('students.html', students=students, search_query=search_query)
 
 @app.route('/courses')
 def courses():
