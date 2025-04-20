@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Average Grades Per Course</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Average Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in course_averages %}
+            <tr>
+                <td>{{ row.course_name }}</td>
+                <td>{{ "%.2f"|format(row.average_grade) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -227,6 +227,22 @@ def update_course(course_id):
     conn.close()
     return redirect(url_for('courses'))
 
+@app.route('/course-averages')
+def course_averages():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT Courses.name AS course_name, AVG(Enrollments.grade) AS average_grade
+        FROM Enrollments
+        JOIN Courses ON Enrollments.course_id = Courses.id
+        GROUP BY Enrollments.course_id
+    """)
+    course_averages = cursor.fetchall()
+    conn.close()
+
+    return render_template('course_averages.html', course_averages=course_averages)
+
 
 if __name__ == '__main__':
     app.run()
