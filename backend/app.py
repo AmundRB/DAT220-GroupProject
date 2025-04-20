@@ -90,6 +90,16 @@ def add_student():
     conn.close()
     return redirect(url_for('students'))
 
+@app.route('/delete_student/<int:student_id>', methods=['POST'])
+def delete_student(student_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM Students WHERE id = %s", (student_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('students'))
+
+
 
 if __name__ == '__main__':
     app.run()
