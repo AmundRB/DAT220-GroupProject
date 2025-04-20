@@ -1,33 +1,4 @@
-<<<<<<< HEAD
-{% extends "index.html" %}
-{% block content %}
-    <div class="container mt-4">
-        <h2>Students</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Enrollment Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in students %}
-                <tr>
-                    <td>{{ student.id }}</td>
-                    <td>
-                        <a href="{{ url_for('student_detail', student_id=student.id) }}">
-                            {{ student.name }}
-                        </a>
-                    </td>
-                    <td>{{ student.email }}</td>
-                    <td>{{ student.enrollment_date }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-=======
+
 {% extends "index.html" %} {% block content %}
 <div class="container mt-4">
   <h2>Students</h2>
@@ -63,7 +34,6 @@
       <div class="col">
         <button type="submit" class="btn btn-primary">Add Student</button>
       </div>
->>>>>>> de2b41adfa80081bec888020a5031b6bdfc1c77f
     </div>
   </form>
 
@@ -81,7 +51,11 @@
       {% for student in students %}
       <tr>
         <td>{{ student.id }}</td>
-        <td>{{ student.name }}</td>
+        <td>
+            <a href="{{ url_for('student_detail', student_id=student.id) }}">
+                {{ student.name }}
+            </a>
+        </td>
         <td>{{ student.email }}</td>
         <td>{{ student.enrollment_date }}</td>
         <td>
