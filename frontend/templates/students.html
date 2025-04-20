@@ -66,6 +66,7 @@
           <form
             action="{{ url_for('delete_student', student_id=student.id) }}"
             method="post"
+            style="display: inline"
             onsubmit="return confirm('Delete this student?');"
           >
             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
