@@ -129,6 +129,39 @@ def delete_student(student_id):
     conn.close()
     return redirect(url_for('students'))
 
+@app.route('/edit_student/<int:student_id>', methods=['GET'])
+def edit_student(student_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM Students WHERE id = %s", (student_id,))
+    student = cursor.fetchone()
+    conn.close()
+
+    if student is None:
+        return "Student not found", 404
+    
+    student["enrollment_date"] = student["enrollment_date"].strftime("%Y-%m-%d")
+    
+    return render_template('edit_student.html', student=student)
+
+
+@app.route('/update_student/<int:student_id>', methods=['POST'])
+def update_student(student_id):
+    name = request.form['name']
+    email = request.form['email']
+    enrollment_date = request.form['enrollment_date']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE Students
+        SET name = %s, email = %s, enrollment_date = %s
+        WHERE id = %s
+    """, (name, email, enrollment_date, student_id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('students'))
+
 
 
 if __name__ == '__main__':
