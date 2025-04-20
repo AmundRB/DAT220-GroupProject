@@ -74,5 +74,35 @@ def enrollments():
     conn.close()
     return render_template('enrollments.html', courses=courses, students=students, selected_course_id=selected_course_id)
 
+@app.route('/students/<int:student_id>')
+def student_detail(student_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Get student info
+    cursor.execute("SELECT * FROM Students WHERE id = %s", (student_id,))
+    student = cursor.fetchone()
+
+    # Get student's courses and grades
+    cursor.execute("""
+        SELECT Courses.name AS course_name, Enrollments.grade
+        FROM Enrollments
+        JOIN Courses ON Enrollments.course_id = Courses.id
+        WHERE Enrollments.student_id = %s
+    """, (student_id,))
+    courses = cursor.fetchall()
+
+    # Calculate average grade
+    cursor.execute("""
+        SELECT AVG(grade) AS avg_grade
+        FROM Enrollments
+        WHERE student_id = %s
+    """, (student_id,))
+    avg_result = cursor.fetchone()
+    avg_grade = avg_result['avg_grade'] if avg_result['avg_grade'] is not None else "N/A"
+
+    conn.close()
+    return render_template('student_detail.html', student=student, courses=courses, avg_grade=avg_grade)
+
 if __name__ == '__main__':
     app.run()
