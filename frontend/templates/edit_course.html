@@ -1,0 +1,51 @@
+{% extends "index.html" %} {% block content %}
+<div class="container mt-4">
+  <h2>Edit Course</h2>
+  <form
+    action="{{ url_for('update_course', course_id=course.id) }}"
+    method="post"
+  >
+    <div class="mb-3">
+      <label>Name:</label>
+      <input
+        type="text"
+        name="name"
+        class="form-control"
+        value="{{ course.name }}"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label>Description:</label>
+      <input
+        type="text"
+        name="description"
+        class="form-control"
+        value="{{ course.description }}"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label>Credits:</label>
+      <input
+        type="number"
+        name="credits"
+        class="form-control"
+        value="{{ course.credits }}"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label>Professor ID (optional):</label>
+      <input
+        type="number"
+        name="professor_id"
+        class="form-control"
+        value="{{ course.professor_id }}"
+      />
+    </div>
+    <button type="submit" class="btn btn-success">Update Course</button>
+    <a href="{{ url_for('courses') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

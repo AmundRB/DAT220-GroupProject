@@ -104,6 +104,9 @@ def student_detail(student_id):
     conn.close()
     return render_template('student_detail.html', student=student, courses=courses, avg_grade=avg_grade)
 
+"---------- CRUD STUDENT FUNCTIONALITY ----------"
+
+
 @app.route('/add_student', methods=['POST'])
 def add_student():
     name = request.form['name']
@@ -141,7 +144,7 @@ def edit_student(student_id):
         return "Student not found", 404
     
     student["enrollment_date"] = student["enrollment_date"].strftime("%Y-%m-%d")
-    
+
     return render_template('edit_student.html', student=student)
 
 
@@ -162,6 +165,67 @@ def update_student(student_id):
     conn.close()
     return redirect(url_for('students'))
 
+"---------- CRUD COURSES FUNCTIONALITY ----------"
+
+@app.route('/add_course', methods=['POST'])
+def add_course():
+    name = request.form['name']
+    description = request.form['description']
+    credits = request.form['credits']
+    professor_id = request.form['professor_id'] or None
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO Courses (name, description, credits, professor_id)
+        VALUES (%s, %s, %s, %s)
+    """, (name, description, credits, professor_id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('courses'))
+
+
+@app.route('/delete_course/<int:course_id>', methods=['POST'])
+def delete_course(course_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM Courses WHERE id = %s", (course_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('courses'))
+
+
+@app.route('/edit_course/<int:course_id>')
+def edit_course(course_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM Courses WHERE id = %s", (course_id,))
+    course = cursor.fetchone()
+    conn.close()
+
+    if course is None:
+        return "Course not found", 404
+
+    return render_template('edit_course.html', course=course)
+
+
+@app.route('/update_course/<int:course_id>', methods=['POST'])
+def update_course(course_id):
+    name = request.form['name']
+    description = request.form['description']
+    credits = request.form['credits']
+    professor_id = request.form['professor_id'] or None
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE Courses
+        SET name = %s, description = %s, credits = %s, professor_id = %s
+        WHERE id = %s
+    """, (name, description, credits, professor_id, course_id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('courses'))
 
 
 if __name__ == '__main__':
