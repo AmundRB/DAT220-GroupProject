@@ -49,6 +49,31 @@ def courses():
     conn.close()
     return render_template('courses.html', courses=courses)
 
+@app.route('/enrollments', methods=['GET', 'POST'])
+def enrollments():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Get course list for the dropdown
+    cursor.execute("SELECT id, name FROM Courses")
+    courses = cursor.fetchall()
+
+    students = []
+    selected_course_id = None
+
+    if request.method == 'POST':
+        selected_course_id = request.form['course_id']
+        cursor.execute("""
+            SELECT Students.id, Students.name, Students.email, Enrollments.grade
+            FROM Enrollments
+            JOIN Students ON Enrollments.student_id = Students.id
+            WHERE Enrollments.course_id = %s
+        """, (selected_course_id,))
+        students = cursor.fetchall()
+
+    conn.close()
+    return render_template('enrollments.html', courses=courses, students=students, selected_course_id=selected_course_id)
+
 @app.route('/add_student', methods=['POST'])
 def add_student():
     name = request.form['name']
