@@ -49,5 +49,22 @@ def courses():
     conn.close()
     return render_template('courses.html', courses=courses)
 
+@app.route('/add_student', methods=['POST'])
+def add_student():
+    name = request.form['name']
+    email = request.form['email']
+    enrollment_date = request.form['enrollment_date']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO Students (name, email, enrollment_date)
+        VALUES (%s, %s, %s)
+    """, (name, email, enrollment_date))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('students'))
+
+
 if __name__ == '__main__':
     app.run()
