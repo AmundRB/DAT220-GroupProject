@@ -258,5 +258,28 @@ def course_averages():
     return render_template('course_averages.html', course_averages=course_averages)
 
 
+"---------- Assignments FUNCTIONALITY ----------"
+@app.route('/assignments')
+def assignments():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT 
+            Courses.name AS course_name,
+            Assignments.title AS assignment_title,
+            Assignments.due_date
+        FROM Assignments
+        JOIN Courses ON Assignments.course_id = Courses.id
+        ORDER BY Courses.name, Assignments.due_date;
+    """)
+    assignment_data = cursor.fetchall()
+    conn.close()
+
+    return render_template('assignments.html', assignments=assignment_data)
+
+
+
+
 if __name__ == '__main__':
     app.run()
