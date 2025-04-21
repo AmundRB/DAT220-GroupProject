@@ -238,6 +238,9 @@ def update_course(course_id):
     conn.close()
     return redirect(url_for('courses'))
 
+
+"---------- COURSE AVERAGES FUNCTIONALITY ----------"
+
 @app.route('/course-averages')
 def course_averages():
     conn = get_db_connection()
