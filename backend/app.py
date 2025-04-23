@@ -33,7 +33,7 @@ def students():
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-
+    #SEARCH FUNCTION ------------------------------------------------------------------------
     if search_query:
         cursor.execute(
             "SELECT * FROM Students WHERE name LIKE %s",
@@ -71,7 +71,7 @@ def enrollments():
 
     students = []
     selected_course_id = None
-
+    # JOIN COURSE ENROLLMENTS --------------------------------------------------------------
     if request.method == 'POST':
         selected_course_id = request.form['course_id']
         cursor.execute("""
@@ -90,7 +90,6 @@ def student_detail(student_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # Get student info
     cursor.execute("SELECT * FROM Students WHERE id = %s", (student_id,))
     student = cursor.fetchone()
 
@@ -103,7 +102,7 @@ def student_detail(student_id):
     """, (student_id,))
     courses = cursor.fetchall()
 
-    # Calculate average grade
+    # Calculate average grade ------------------------------------------------
     cursor.execute("""
         SELECT AVG(grade) AS avg_grade
         FROM Enrollments
